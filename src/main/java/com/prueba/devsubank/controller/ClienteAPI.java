@@ -1,18 +1,28 @@
 package com.prueba.devsubank.controller;
 
-import com.prueba.devsubank.dto.ClienteResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.prueba.devsubank.dao.model.Cliente;
+import com.prueba.devsubank.dto.ClientePostReq;
+import com.prueba.devsubank.service.ClienteService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/clientes")
 @RestController
 public class ClienteAPI {
 
-    @GetMapping("{clienteId}")
-    public ClienteResponse getCliente(String clienteId){
-        ClienteResponse cliente = new ClienteResponse();
-        cliente.setNombre("Jose");
-        return cliente;
+    private final ClienteService clienteService;
+
+    public ClienteAPI(ClienteService clienteService) {
+        this.clienteService = clienteService;
     }
+
+
+    @PostMapping()
+    public ResponseEntity<ClientePostReq> getCliente(@RequestBody ClientePostReq clientePostReq){
+
+        clienteService.crearCliente(clientePostReq);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

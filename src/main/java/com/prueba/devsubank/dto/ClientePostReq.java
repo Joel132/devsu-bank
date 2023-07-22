@@ -1,5 +1,6 @@
 package com.prueba.devsubank.dto;
 
+//TODO: poner annotations para validaciones
 public class ClientePostReq {
 
     private String nombre;
@@ -9,6 +10,9 @@ public class ClientePostReq {
     private String telefono;
     private String contrasena;
     private String clienteId;
+    //TODO: crear clase identificacion
+    private String tipoDocumento;
+    private String numeroDocumento;
 
     public String getNombre() {
         return nombre;
@@ -66,10 +70,33 @@ public class ClientePostReq {
         this.contrasena = contrasena;
     }
 
+    public String getNumeroDocumento() {
+        return numeroDocumento;
+    }
+
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
+    }
+
+    public String getTipoDocumento() {
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(String tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+
     @Override
     public String toString() {
-        return "ClienteResponse{" +
+        return "ClientePostReq{" +
                 "nombre='" + nombre + '\'' +
+                ", genero='" + genero + '\'' +
+                ", edad=" + edad +
+                ", direccion='" + direccion + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", clienteId='" + clienteId + '\'' +
+                ", tipoDocumento='" + tipoDocumento + '\'' +
+                ", numeroDocumento='" + numeroDocumento + '\'' +
                 '}';
     }
 }

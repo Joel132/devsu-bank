@@ -6,6 +6,8 @@ import com.prueba.devsubank.service.ClienteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RequestMapping("/clientes")
 @RestController
 public class ClienteAPI {
@@ -21,7 +23,7 @@ public class ClienteAPI {
     public ResponseEntity<ClientePostReq> getCliente(@RequestBody ClientePostReq clientePostReq){
 
         clienteService.crearCliente(clientePostReq);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create("clientes")).build();
     }
 
 

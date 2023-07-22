@@ -14,6 +14,8 @@ public class ClienteBuilder {
         cliente.setGenero(clientePostReq.getGenero());
         cliente.setContrasena(clientePostReq.getContrasena());
         cliente.setClienteId(clientePostReq.getClienteId());
+        cliente.setNumeroDocumento(clientePostReq.getNumeroDocumento());
+        cliente.setTipoDocumento(clientePostReq.getTipoDocumento());
         return cliente;
     }
 }

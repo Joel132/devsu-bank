@@ -8,6 +8,13 @@ public class Persona {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
+    //TODO: analizar usar embeddable para datos de documentos
+    @Column(name="numero_documento", length=30, nullable=false)
+    private String numeroDocumento;
+
+    @Column(name="tipo_documento", length=5, nullable=false)
+    private String tipoDocumento;
+
     @Column(name="nombre", length=100, nullable=false)
     private String nombre;
 
@@ -70,5 +77,21 @@ public class Persona {
 
     public Long getId() {
         return id;
+    }
+
+    public String getNumeroDocumento() {
+        return numeroDocumento;
+    }
+
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
+    }
+
+    public String getTipoDocumento() {
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(String tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
     }
 }

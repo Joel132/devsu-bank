@@ -1,10 +1,9 @@
 package com.prueba.devsubank.dao.model;
 
 import com.prueba.devsubank.config.EncriptadorPassword;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "cliente")
@@ -15,7 +14,10 @@ public class Cliente extends Persona{
     @Convert(converter = EncriptadorPassword.class)
     private String contrasena;
 
+    @Column(columnDefinition = "varchar(16) default 'Activo'")
     private String estado;
+    @OneToMany(mappedBy = "cliente")
+    private List<Cuenta> cuentas;
 
     public String getContrasena() {
         return contrasena;
@@ -39,5 +41,13 @@ public class Cliente extends Persona{
 
     public void setClienteId(String clienteId) {
         this.clienteId = clienteId;
+    }
+
+    public List<Cuenta> getCuentas() {
+        return cuentas;
+    }
+
+    public void setCuentas(List<Cuenta> cuentas) {
+        this.cuentas = cuentas;
     }
 }

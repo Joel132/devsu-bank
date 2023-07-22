@@ -11,7 +11,6 @@ public class CuentaPostReq {
     private BigDecimal saldoInicial;
     private String moneda;
 
-    private String clienteId;
 
     public String getNumero() {
         return numero;
@@ -45,13 +44,6 @@ public class CuentaPostReq {
         this.saldoInicial = saldoInicial;
     }
 
-    public String getClienteId() {
-        return clienteId;
-    }
-
-    public void setClienteId(String clienteId) {
-        this.clienteId = clienteId;
-    }
 
     public String getMoneda() {
         return moneda;

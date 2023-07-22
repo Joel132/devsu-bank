@@ -7,7 +7,6 @@ public class MovimientoPostReq {
 
     private OffsetDateTime fecha;
     private BigDecimal valor;
-    private String numeroCuenta;
     private String tipoMovimiento;
 
     public MovimientoPostReq() {
@@ -30,13 +29,6 @@ public class MovimientoPostReq {
         this.valor = valor;
     }
 
-    public String getNumeroCuenta() {
-        return numeroCuenta;
-    }
-
-    public void setNumeroCuenta(String numeroCuenta) {
-        this.numeroCuenta = numeroCuenta;
-    }
 
     public String getTipoMovimiento() {
         return tipoMovimiento;

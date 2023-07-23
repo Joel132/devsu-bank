@@ -14,7 +14,7 @@ public class ClientePostReq {
     @Min(18)
     private Integer edad;
     @NotBlank
-    @Max(100)
+    @Size(max = 100)
     private String direccion;
     @NotBlank
     @Size(max = 20)
@@ -119,13 +119,14 @@ public class ClientePostReq {
     public String toString() {
         return "ClientePostReq{" +
                 "nombre='" + nombre + '\'' +
-                ", genero='" + genero + '\'' +
+                ", genero=" + genero +
                 ", edad=" + edad +
                 ", direccion='" + direccion + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", clienteId='" + clienteId + '\'' +
                 ", tipoDocumento='" + tipoDocumento + '\'' +
                 ", numeroDocumento='" + numeroDocumento + '\'' +
+                ", activo=" + activo +
                 '}';
     }
 }

@@ -6,6 +6,8 @@ import com.prueba.devsubank.dto.CuentaPostReq;
 import com.prueba.devsubank.service.ClienteService;
 import com.prueba.devsubank.service.CuentaService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +17,7 @@ import java.net.URI;
 @RestController
 public class ClienteAPI {
 
+    Logger logger = LoggerFactory.getLogger(ClienteAPI.class);
     public static final String basePath = "/clientes";
     private final ClienteService clienteService;
     private final CuentaService cuentaService;
@@ -26,7 +29,8 @@ public class ClienteAPI {
 
 
     @PostMapping()
-    public ResponseEntity<ClientePostReq> crearCliente(@Valid  @RequestBody ClientePostReq clientePostReq){
+    public ResponseEntity crearCliente(@Valid  @RequestBody ClientePostReq clientePostReq){
+        logger.info("Llamada al endpont POST: {} con el body [{}]",basePath, clientePostReq);
 
         Long id = clienteService.crearCliente(clientePostReq);
         return ResponseEntity
@@ -35,8 +39,10 @@ public class ClienteAPI {
     }
 
     @PostMapping("{clienteId}/cuentas")
-    public ResponseEntity<CuentaPostReq> crearCuenta(@Valid @RequestBody CuentaPostReq cuentaPostReq,
+    public ResponseEntity crearCuenta(@Valid @RequestBody CuentaPostReq cuentaPostReq,
                                                      @PathVariable Long clienteId){
+
+        logger.info("Llamada al endpont POST: {}/cuentas con el body [{}]",basePath, cuentaPostReq);
 
         Long id = cuentaService.crearCuenta(cuentaPostReq,clienteId);
         return ResponseEntity
@@ -47,6 +53,8 @@ public class ClienteAPI {
     @PutMapping("{clienteId}")
     public ResponseEntity actualizarCliente(@Valid @RequestBody ClientePutReq clientePutReq,
                                             @PathVariable Long clienteId){
+        logger.info("Llamada al endpont PUT: {} para actualizar el cliente: {} con el body [{}]",basePath,clienteId, clientePutReq);
+
         clienteService.actualizarCliente(clientePutReq,clienteId);
         return ResponseEntity
                 .ok()
@@ -56,6 +64,8 @@ public class ClienteAPI {
     @PatchMapping("{clienteId}")
     public ResponseEntity editarCliente(@RequestBody ClientePutReq clientePutReq,
                                             @PathVariable Long clienteId){
+        logger.info("Llamada al endpont PUT: {} para actualizar el cliente: {} con el body [{}]",basePath,clienteId, clientePutReq);
+
         clienteService.editarCliente(clientePutReq,clienteId);
         return ResponseEntity
                 .ok()
@@ -64,6 +74,7 @@ public class ClienteAPI {
 
     @DeleteMapping("{clienteId}")
     public ResponseEntity eliminarCliente(@PathVariable Long clienteId){
+        logger.info("Llamada al endpont DELETE: {} para eliminar el cliente: {}",basePath,clienteId);
         clienteService.eliminarCliente(clienteId);
         return ResponseEntity
                 .ok()

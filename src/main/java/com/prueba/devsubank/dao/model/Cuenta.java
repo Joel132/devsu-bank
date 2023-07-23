@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name = "cuenta")
+@Table(name = "cuenta",uniqueConstraints = { @UniqueConstraint(columnNames = { "numero", "tipo" }) })
 public class Cuenta {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -101,5 +101,19 @@ public class Cuenta {
 
     public void setMovimientos(List<Movimiento> movimientos) {
         this.movimientos = movimientos;
+    }
+
+    @Override
+    public String toString() {
+        return "Cuenta{" +
+                "id=" + id +
+                ", numero='" + numero + '\'' +
+                ", tipo='" + tipo + '\'' +
+                ", saldoInicial=" + saldoInicial +
+                ", moneda='" + moneda + '\'' +
+                ", activo=" + activo +
+                ", cliente=" + cliente +
+                ", movimientos=" + movimientos +
+                '}';
     }
 }

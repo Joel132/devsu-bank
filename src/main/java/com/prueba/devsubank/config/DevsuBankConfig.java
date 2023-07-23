@@ -10,11 +10,21 @@ import java.math.BigDecimal;
 public class DevsuBankConfig {
     private BigDecimal limiteDiarioRetiro;
 
+    private String secret;
+
     public BigDecimal getLimiteDiarioRetiro() {
         return limiteDiarioRetiro;
     }
 
     public void setLimiteDiarioRetiro(BigDecimal limiteDiarioRetiro) {
         this.limiteDiarioRetiro = limiteDiarioRetiro;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 }

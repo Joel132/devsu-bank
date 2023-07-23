@@ -109,4 +109,18 @@ public class Persona {
     public void setTipoDocumento(String tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
+
+    @Override
+    public String toString() {
+        return "Persona{" +
+                "id=" + id +
+                ", numeroDocumento='" + numeroDocumento + '\'' +
+                ", tipoDocumento='" + tipoDocumento + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", genero=" + genero +
+                ", edad=" + edad +
+                ", direccion='" + direccion + '\'' +
+                ", telefono='" + telefono + '\'' +
+                '}';
+    }
 }

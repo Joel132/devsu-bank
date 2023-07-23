@@ -63,4 +63,15 @@ public class CuentaPostReq {
     public void setMoneda(String moneda) {
         this.moneda = moneda;
     }
+
+    @Override
+    public String toString() {
+        return "CuentaPostReq{" +
+                "numero='" + numero + '\'' +
+                ", tipo='" + tipo + '\'' +
+                ", activo=" + activo +
+                ", saldoInicial=" + saldoInicial +
+                ", moneda='" + moneda + '\'' +
+                '}';
+    }
 }

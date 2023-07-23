@@ -11,7 +11,6 @@ import java.time.OffsetDateTime;
 
 public class MovimientoPostReq {
 
-    @NotNull
     private OffsetDateTime fecha;
     @PositiveOrZero
     private BigDecimal valor;
@@ -45,5 +44,14 @@ public class MovimientoPostReq {
 
     public void setTipoMovimiento(TipoMovimiento tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;
+    }
+
+    @Override
+    public String toString() {
+        return "MovimientoPostReq{" +
+                "fecha=" + fecha +
+                ", valor=" + valor +
+                ", tipoMovimiento=" + tipoMovimiento +
+                '}';
     }
 }

@@ -5,6 +5,8 @@ import com.prueba.devsubank.dto.MovimientoPostReq;
 import com.prueba.devsubank.service.CuentaService;
 import com.prueba.devsubank.service.MovimientoService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,7 @@ import java.net.URI;
 @RequestMapping(CuentaAPI.basePath)
 @RestController
 public class CuentaAPI {
+    Logger logger = LoggerFactory.getLogger(CuentaAPI.class);
 
     public static final String basePath = "/cuentas";
     private final CuentaService cuentaService;
@@ -25,8 +28,9 @@ public class CuentaAPI {
     }
 
     @PostMapping("{cuentaId}/movimientos")
-    public ResponseEntity<CuentaPostReq> agregarMovimientos(@Valid  @RequestBody MovimientoPostReq movimientoPostReq,
+    public ResponseEntity agregarMovimientos(@Valid  @RequestBody MovimientoPostReq movimientoPostReq,
                                                             @PathVariable Long cuentaId){
+        logger.info("Llamada al endpont POST: {}/{}/movimientos con el body [{}]",basePath,cuentaId, movimientoPostReq);
 
         Long id = movimientoService.registrarMovimiento(movimientoPostReq,cuentaId);
         return ResponseEntity
@@ -36,6 +40,7 @@ public class CuentaAPI {
 
     @DeleteMapping("{cuentaId}")
     public ResponseEntity eliminarCuenta(@PathVariable Long cuentaId){
+        logger.info("Llamada al endpont DELETE: {}/{} con el body [{}]",basePath,cuentaId);
         cuentaService.eliminarCuenta(cuentaId);
         return ResponseEntity
                 .ok()

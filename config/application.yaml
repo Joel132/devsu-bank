@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate.default_schema: banco
+  datasource:
+    url: jdbc:postgresql://localhost:5432/devsu
+    username: postgres
+    password: postgres
+
+logging:
+  level:
+    com.prueba.devsubank: debug
+devsubank:
+  limite-diario-retiro: 1000
+  secret: secret-key-12345

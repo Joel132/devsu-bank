@@ -83,4 +83,16 @@ public class Movimiento {
     public Cuenta getCuenta() {
         return cuenta;
     }
+
+    @Override
+    public String toString() {
+        return "Movimiento{" +
+                "id=" + id +
+                ", fecha=" + fecha +
+                ", tipo=" + tipo +
+                ", valor=" + valor +
+                ", saldo=" + saldo +
+                ", cuenta=" + cuenta +
+                '}';
+    }
 }

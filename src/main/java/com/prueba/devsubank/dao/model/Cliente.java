@@ -56,4 +56,13 @@ public class Cliente extends Persona{
     public void setCuentas(List<Cuenta> cuentas) {
         this.cuentas = cuentas;
     }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "clienteId='" + clienteId + '\'' +
+                ", activo=" + activo +
+                ", cuentas=" + cuentas +
+                "} " + super.toString();
+    }
 }

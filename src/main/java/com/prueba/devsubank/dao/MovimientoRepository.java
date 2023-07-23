@@ -2,6 +2,7 @@ package com.prueba.devsubank.dao;
 
 import com.prueba.devsubank.dao.model.Cuenta;
 import com.prueba.devsubank.dao.model.Movimiento;
+import com.prueba.devsubank.enums.TipoMovimiento;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,7 @@ public interface MovimientoRepository extends CrudRepository<Movimiento, Long> {
 
     List<Movimiento> findMovimientosByCuentaAndIdIsGreaterThan(Cuenta cuenta, Long id);
 
-    List<Movimiento> findMovimientosByFechaBetweenAndTipoEqualsIgnoreCase(OffsetDateTime today, OffsetDateTime tomorrow, String tipo);
+    List<Movimiento> findMovimientosByFechaBetweenAndTipoEquals(OffsetDateTime today, OffsetDateTime tomorrow, TipoMovimiento tipo);
 
     List<Movimiento> findMovimientosByCuenta_Cliente_IdAndFechaBetweenOrderByIdAsc(Long clienteId, OffsetDateTime to, OffsetDateTime t1);
 

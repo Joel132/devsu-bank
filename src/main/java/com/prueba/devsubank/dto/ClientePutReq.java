@@ -116,4 +116,19 @@ public class ClientePutReq {
     public void setActivo(Boolean activo) {
         this.activo = activo;
     }
+
+    @Override
+    public String toString() {
+        return "ClientePutReq{" +
+                "nombre='" + nombre + '\'' +
+                ", genero=" + genero +
+                ", edad=" + edad +
+                ", direccion='" + direccion + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", clienteId='" + clienteId + '\'' +
+                ", tipoDocumento='" + tipoDocumento + '\'' +
+                ", numeroDocumento='" + numeroDocumento + '\'' +
+                ", activo=" + activo +
+                '}';
+    }
 }

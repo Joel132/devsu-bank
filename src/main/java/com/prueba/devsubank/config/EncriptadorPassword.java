@@ -15,14 +15,14 @@ import java.util.Base64;
 public class EncriptadorPassword implements AttributeConverter<String, String> {
 
     private static final String AES = "AES";
-    //TODO: parametrizar
-    private static final String SECRET = "secret-key-12345";
+    private final DevsuBankConfig config;
 
     private final Key key;
     private final Cipher cipher;
 
-    public EncriptadorPassword() throws Exception {
-        key = new SecretKeySpec(SECRET.getBytes(), AES);
+    public EncriptadorPassword(DevsuBankConfig config) throws Exception {
+        this.config = config;
+        key = new SecretKeySpec(config.getSecret().getBytes(), AES);
         cipher = Cipher.getInstance(AES);
     }
 

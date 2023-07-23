@@ -42,7 +42,7 @@ public class ClienteAPI {
     public ResponseEntity crearCuenta(@Valid @RequestBody CuentaPostReq cuentaPostReq,
                                                      @PathVariable Long clienteId){
 
-        logger.info("Llamada al endpont POST: {}/cuentas con el body [{}]",basePath, cuentaPostReq);
+        logger.info("Llamada al endpont POST: {}/{}/cuentas con el body [{}]",basePath,clienteId, cuentaPostReq);
 
         Long id = cuentaService.crearCuenta(cuentaPostReq,clienteId);
         return ResponseEntity

@@ -62,7 +62,6 @@ public class Cliente extends Persona{
         return "Cliente{" +
                 "clienteId='" + clienteId + '\'' +
                 ", activo=" + activo +
-                ", cuentas=" + cuentas +
                 "} " + super.toString();
     }
 }

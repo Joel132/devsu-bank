@@ -119,15 +119,6 @@ public class MovimientoService {
         }
     }
 
-    private BigDecimal obtenerSaldoAnterior(Cuenta cuenta) {
-        BigDecimal saldoAntesMovimiento = cuenta.getSaldoInicial();
-        Optional<Movimiento> movimientoOptional = movimientoRepository.findFirstByCuentaOrderByIdDesc(cuenta);
-        if(movimientoOptional.isPresent()){
-            saldoAntesMovimiento = movimientoOptional.get().getSaldo();
-        }
-        return saldoAntesMovimiento;
-    }
-
     private Movimiento obtenerUltimoMovimiento(Cuenta cuenta){
         Optional<Movimiento> movimientoOptional = movimientoRepository.findFirstByCuentaOrderByIdDesc(cuenta);
         if(movimientoOptional.isPresent()){

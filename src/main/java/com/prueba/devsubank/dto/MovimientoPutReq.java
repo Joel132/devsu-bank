@@ -2,13 +2,14 @@ package com.prueba.devsubank.dto;
 
 import com.prueba.devsubank.enums.TipoMovimiento;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
 
 public class MovimientoPutReq {
 
-    @PositiveOrZero
+    @Positive
     @NotNull
     private BigDecimal valor;
     @NotNull

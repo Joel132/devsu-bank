@@ -1,10 +1,7 @@
 package com.prueba.devsubank.dto;
 
 import com.prueba.devsubank.enums.TipoMovimiento;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,7 +9,7 @@ import java.time.LocalDate;
 public class MovimientoPostReq {
 
     private LocalDate fecha;
-    @PositiveOrZero
+    @Positive
     @NotNull
     private BigDecimal valor;
     @NotNull

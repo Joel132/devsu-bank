@@ -1,6 +1,8 @@
 package com.prueba.devsubank.dao.model;
 
+import com.prueba.devsubank.enums.Genero;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @MappedSuperclass
 public class Persona {
@@ -8,26 +10,39 @@ public class Persona {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    //TODO: analizar usar embeddable para datos de documentos
     @Column(name="numero_documento", length=30, nullable=false)
+    @Size(max = 30)
+    @NotBlank
     private String numeroDocumento;
 
     @Column(name="tipo_documento", length=5, nullable=false)
+    @Size(max = 5)
+    @NotBlank
     private String tipoDocumento;
 
     @Column(name="nombre", length=100, nullable=false)
+    @NotBlank
+    @Size(max = 100)
     private String nombre;
 
     @Column(name="genero", length=10, nullable=false)
-    private String genero;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Genero genero;
 
     @Column(name="edad", nullable=false)
+    @NotNull
+    @Min(18)
     private Integer edad;
 
-    @Column(name="direccion", length=100, nullable=true)
+    @Column(name="direccion", length=100, nullable=false)
+    @NotBlank
+    @Size(max = 100)
     private String direccion;
 
-    @Column(name="telefono", length=20, nullable=true)
+    @Column(name="telefono", length=20, nullable=false)
+    @NotBlank
+    @Size(max = 20)
     private String telefono;
 
 
@@ -39,11 +54,11 @@ public class Persona {
         this.nombre = nombre;
     }
 
-    public String getGenero() {
+    public Genero getGenero() {
         return genero;
     }
 
-    public void setGenero(String genero) {
+    public void setGenero(Genero genero) {
         this.genero = genero;
     }
 

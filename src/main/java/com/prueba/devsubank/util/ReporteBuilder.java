@@ -24,7 +24,7 @@ public class ReporteBuilder {
         reporteGetResponse.setTipoCuenta(movimiento.getCuenta().getTipo());
         reporteGetResponse.setSaldoInicial(movimiento.getCuenta().getSaldoInicial());
         reporteGetResponse.setSaldoDisponible(movimiento.getSaldo());
-        reporteGetResponse.setValorMovimiento(movimiento.getTipo().equalsIgnoreCase("DEBITO")?movimiento.getValor().negate():movimiento.getValor());
+        reporteGetResponse.setMovimiento(String.format("%s de %s",movimiento.getTipo(),movimiento.getTipo().equalsIgnoreCase("DEBITO")?movimiento.getValor().negate():movimiento.getValor()));
         return reporteGetResponse;
 
     }

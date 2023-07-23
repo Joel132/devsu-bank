@@ -1,14 +1,25 @@
 package com.prueba.devsubank.dto;
 
+import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 
 //TODO: poner annotations para validaciones
 public class CuentaPostReq {
 
+    @NotBlank
+    @Size(min = 1, max = 64)
     private String numero;
+    @NotBlank
+    @Size(min = 1, max = 16)
     private String tipo;
-    private String estado;
+    @NotNull
+    private Boolean activo;
+    @NotNull
+    @PositiveOrZero
     private BigDecimal saldoInicial;
+    @NotBlank
+    @Size(max = 8)
     private String moneda;
 
 
@@ -28,12 +39,12 @@ public class CuentaPostReq {
         this.tipo = tipo;
     }
 
-    public String getEstado() {
-        return estado;
+    public Boolean getActivo() {
+        return activo;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
     public BigDecimal getSaldoInicial() {

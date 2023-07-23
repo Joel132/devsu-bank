@@ -4,6 +4,7 @@ import com.prueba.devsubank.dto.CuentaPostReq;
 import com.prueba.devsubank.dto.MovimientoPostReq;
 import com.prueba.devsubank.service.CuentaService;
 import com.prueba.devsubank.service.MovimientoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class CuentaAPI {
     }
 
     @PostMapping("{cuentaId}/movimientos")
-    public ResponseEntity<CuentaPostReq> agregarMovimientos(@RequestBody MovimientoPostReq movimientoPostReq,
+    public ResponseEntity<CuentaPostReq> agregarMovimientos(@Valid  @RequestBody MovimientoPostReq movimientoPostReq,
                                                             @PathVariable Long cuentaId){
 
         Long id = movimientoService.registrarMovimiento(movimientoPostReq,cuentaId);

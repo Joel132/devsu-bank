@@ -1,19 +1,41 @@
 package com.prueba.devsubank.dto;
 
-//TODO: poner annotations para validaciones
+import com.prueba.devsubank.enums.Genero;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class ClientePutReq {
 
+    @NotBlank
     private String nombre;
-    private String genero;
+    @NotNull
+    private Genero genero;
+    @NotNull
+    @Min(18)
     private Integer edad;
+    @NotBlank
+    @Size(max = 100)
     private String direccion;
+    @NotBlank
+    @Size(max = 20)
     private String telefono;
+    @NotBlank
+    @Size(min = 8, max = 255)
     private String contrasena;
+    @NotBlank
+    @Size(max = 64)
     private String clienteId;
     //TODO: crear clase identificacion
+    @NotBlank
+    @Size(max = 5)
     private String tipoDocumento;
+    @NotBlank
+    @Size(max = 30)
     private String numeroDocumento;
-    private String estado;
+    @NotNull
+    private Boolean activo;
 
     public String getNombre() {
         return nombre;
@@ -23,11 +45,11 @@ public class ClientePutReq {
         this.nombre = nombre;
     }
 
-    public String getGenero() {
+    public Genero getGenero() {
         return genero;
     }
 
-    public void setGenero(String genero) {
+    public void setGenero(Genero genero) {
         this.genero = genero;
     }
 
@@ -87,11 +109,11 @@ public class ClientePutReq {
         this.tipoDocumento = tipoDocumento;
     }
 
-    public String getEstado() {
-        return estado;
+    public Boolean getActivo() {
+        return activo;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 }

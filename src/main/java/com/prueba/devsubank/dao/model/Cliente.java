@@ -2,20 +2,25 @@ package com.prueba.devsubank.dao.model;
 
 import com.prueba.devsubank.config.EncriptadorPassword;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import java.util.List;
 
 @Entity
-@Table(name = "cliente")
+@Table(name = "cliente",uniqueConstraints = { @UniqueConstraint(columnNames = { "numero_documento", "tipo_documento" }) })
 public class Cliente extends Persona{
 
     @Column(name = "cliente_id",length = 64, nullable = false)
+    @NotBlank
+    @Size(max = 64)
     private String clienteId;
     @Convert(converter = EncriptadorPassword.class)
+    @Size(min = 8, max = 255)
     private String contrasena;
 
-    @Column(columnDefinition = "varchar(16) default 'Activo'")
-    private String estado;
+    @Column(name = "activo", nullable = false)
+    @NotNull
+    private Boolean activo;
     @OneToMany(mappedBy = "cliente")
     private List<Cuenta> cuentas;
 
@@ -23,16 +28,17 @@ public class Cliente extends Persona{
         return contrasena;
     }
 
-    public String getEstado() {
-        return estado;
-    }
 
     public void setContrasena(String contrasena) {
         this.contrasena = contrasena;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
     public String getClienteId() {

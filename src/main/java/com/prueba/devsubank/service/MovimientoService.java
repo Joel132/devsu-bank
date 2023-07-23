@@ -8,6 +8,7 @@ import com.prueba.devsubank.dao.model.Cuenta;
 import com.prueba.devsubank.dao.model.Movimiento;
 import com.prueba.devsubank.dto.MovimientoPostReq;
 import com.prueba.devsubank.dto.ReporteGetResponse;
+import com.prueba.devsubank.enums.TipoMovimiento;
 import com.prueba.devsubank.exceptions.BankException;
 import com.prueba.devsubank.util.MovimientoBuilder;
 import com.prueba.devsubank.util.ReporteBuilder;
@@ -41,7 +42,7 @@ public class MovimientoService {
         if(movimiento.getSaldo().compareTo(BigDecimal.ZERO)<0){
             throw BankException.newBankException("00","Saldo No Disponible");
         }
-        if(movimientoPostReq.getTipoMovimiento().equalsIgnoreCase("DEBITO") && montoExtraidoHoy.add(movimientoPostReq.getValor()).compareTo(configProps.getLimiteDiarioRetiro())>0){
+        if(movimientoPostReq.getTipoMovimiento().equals(TipoMovimiento.DEBITO) && montoExtraidoHoy.add(movimientoPostReq.getValor()).compareTo(configProps.getLimiteDiarioRetiro())>0){
             throw BankException.newBankException("00","Cupo diario Excedido");
         }
         movimiento = movimientoRepository.save(movimiento);

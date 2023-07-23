@@ -1,13 +1,22 @@
 package com.prueba.devsubank.dto;
 
+import com.prueba.devsubank.enums.TipoMovimiento;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 public class MovimientoPostReq {
 
+    @NotNull
     private OffsetDateTime fecha;
+    @PositiveOrZero
     private BigDecimal valor;
-    private String tipoMovimiento;
+    @NotNull
+    private TipoMovimiento tipoMovimiento;
 
     public MovimientoPostReq() {
         this.fecha = OffsetDateTime.now();
@@ -30,11 +39,11 @@ public class MovimientoPostReq {
     }
 
 
-    public String getTipoMovimiento() {
+    public TipoMovimiento getTipoMovimiento() {
         return tipoMovimiento;
     }
 
-    public void setTipoMovimiento(String tipoMovimiento) {
+    public void setTipoMovimiento(TipoMovimiento tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;
     }
 }

@@ -1,6 +1,8 @@
 package com.prueba.devsubank.dao.model;
 
+import com.prueba.devsubank.enums.TipoMovimiento;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -14,15 +16,20 @@ public class Movimiento {
     private Long id;
 
     @Column(name = "fecha", nullable = false)
+    @NotNull
     private OffsetDateTime fecha;
 
     @Column(name = "tipo", nullable = false, length = 10)
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private TipoMovimiento tipo;
 
     @Column(name = "valor", nullable = false)
+    @NotNull
     private BigDecimal valor;
 
     @Column(name = "saldo", nullable = false)
+    @NotNull
     private BigDecimal saldo;
 
     @ManyToOne
@@ -45,11 +52,11 @@ public class Movimiento {
         this.fecha = fecha;
     }
 
-    public String getTipo() {
+    public TipoMovimiento getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TipoMovimiento tipo) {
         this.tipo = tipo;
     }
 

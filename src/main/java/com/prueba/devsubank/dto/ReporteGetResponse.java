@@ -14,7 +14,8 @@ public class ReporteGetResponse {
 
     private BigDecimal saldoInicial;
 
-    private BigDecimal valorMovimiento;
+    private String movimiento;
+
 
     private BigDecimal saldoDisponible;
 
@@ -58,13 +59,6 @@ public class ReporteGetResponse {
         this.saldoInicial = saldoInicial;
     }
 
-    public BigDecimal getValorMovimiento() {
-        return valorMovimiento;
-    }
-
-    public void setValorMovimiento(BigDecimal valorMovimiento) {
-        this.valorMovimiento = valorMovimiento;
-    }
 
     public BigDecimal getSaldoDisponible() {
         return saldoDisponible;
@@ -72,5 +66,13 @@ public class ReporteGetResponse {
 
     public void setSaldoDisponible(BigDecimal saldoDisponible) {
         this.saldoDisponible = saldoDisponible;
+    }
+
+    public String getMovimiento() {
+        return movimiento;
+    }
+
+    public void setMovimiento(String movimiento) {
+        this.movimiento = movimiento;
     }
 }

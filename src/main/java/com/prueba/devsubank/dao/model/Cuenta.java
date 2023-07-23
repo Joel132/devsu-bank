@@ -1,6 +1,9 @@
 package com.prueba.devsubank.dao.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,15 +16,22 @@ public class Cuenta {
     private Long id;
 
     @Column(name = "numero", unique = true, nullable = false,length = 64)
+    @NotBlank
+    @Size(min = 1, max = 64)
     private String numero;
     @Column(name = "tipo", nullable = false ,length = 16)
+    @NotBlank
+    @Size(min = 1, max = 16)
     private String tipo;
     @Column(name = "saldo_inicial", nullable = false)
     private BigDecimal saldoInicial;
     @Column(name = "moneda", nullable = false, length = 8)
+    @NotBlank
+    @Size(max = 8)
     private String moneda;
-    @Column(name = "estado", nullable = false, length = 16)
-    private String estado;
+    @Column(name = "activo", nullable = false)
+    @NotNull
+    private Boolean activo;
     @ManyToOne
     @JoinColumn(name = "cliente_id",nullable = false)
     private Cliente cliente;
@@ -69,12 +79,12 @@ public class Cuenta {
         this.moneda = moneda;
     }
 
-    public String getEstado() {
-        return estado;
+    public Boolean getActivo() {
+        return activo;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
     public Cliente getCliente() {

@@ -12,7 +12,7 @@ public class CuentaBuilder {
         cuenta.setTipo(cuentaPostReq.getTipo());
         cuenta.setSaldoInicial(cuentaPostReq.getSaldoInicial());
         cuenta.setMoneda(cuentaPostReq.getMoneda());
-        cuenta.setEstado(cuentaPostReq.getEstado());
+        cuenta.setActivo(cuentaPostReq.getActivo());
         cuenta.setCliente(cliente);
         return cuenta;
     }

@@ -5,6 +5,7 @@ import com.prueba.devsubank.dto.ClientePutReq;
 import com.prueba.devsubank.dto.CuentaPostReq;
 import com.prueba.devsubank.service.ClienteService;
 import com.prueba.devsubank.service.CuentaService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class ClienteAPI {
 
 
     @PostMapping()
-    public ResponseEntity<ClientePostReq> crearCliente(@RequestBody ClientePostReq clientePostReq){
+    public ResponseEntity<ClientePostReq> crearCliente(@Valid  @RequestBody ClientePostReq clientePostReq){
 
         Long id = clienteService.crearCliente(clientePostReq);
         return ResponseEntity
@@ -34,7 +35,7 @@ public class ClienteAPI {
     }
 
     @PostMapping("{clienteId}/cuentas")
-    public ResponseEntity<CuentaPostReq> crearCuenta(@RequestBody CuentaPostReq cuentaPostReq,
+    public ResponseEntity<CuentaPostReq> crearCuenta(@Valid @RequestBody CuentaPostReq cuentaPostReq,
                                                      @PathVariable Long clienteId){
 
         Long id = cuentaService.crearCuenta(cuentaPostReq,clienteId);
@@ -44,7 +45,7 @@ public class ClienteAPI {
     }
 
     @PutMapping("{clienteId}")
-    public ResponseEntity actualizarCliente(@RequestBody ClientePutReq clientePutReq,
+    public ResponseEntity actualizarCliente(@Valid @RequestBody ClientePutReq clientePutReq,
                                             @PathVariable Long clienteId){
         clienteService.actualizarCliente(clientePutReq,clienteId);
         return ResponseEntity

@@ -19,6 +19,7 @@ public class ClienteBuilder {
         cliente.setClienteId(clientePostReq.getClienteId());
         cliente.setNumeroDocumento(clientePostReq.getNumeroDocumento());
         cliente.setTipoDocumento(clientePostReq.getTipoDocumento());
+        cliente.setActivo(clientePostReq.getActivo());
         return cliente;
     }
 
@@ -34,7 +35,7 @@ public class ClienteBuilder {
         cliente.setClienteId(clientePutReq.getClienteId());
         cliente.setNumeroDocumento(clientePutReq.getNumeroDocumento());
         cliente.setTipoDocumento(clientePutReq.getTipoDocumento());
-        cliente.setEstado(clientePutReq.getEstado());
+        cliente.setActivo(clientePutReq.getActivo());
         return cliente;
     }
 
@@ -66,8 +67,8 @@ public class ClienteBuilder {
         if(Objects.nonNull(cliente.getTipoDocumento())){
             oldCliente.setTipoDocumento(cliente.getTipoDocumento());
         }
-        if(Objects.nonNull(cliente.getEstado())){
-            oldCliente.setEstado(cliente.getEstado());
+        if(Objects.nonNull(cliente.getActivo())){
+            oldCliente.setActivo(cliente.getActivo());
         }
     }
 }

@@ -7,7 +7,7 @@ public class BankException extends RuntimeException{
 
 
     public static BankException newBankException(String codigo, String descripcionError, Throwable cause){
-        BankException bankException = new BankException(cause);
+        BankException bankException = new BankException(descripcionError,cause);
         bankException.setCodigoError(codigo);
         bankException.setDescripcionError(descripcionError);
         return bankException;

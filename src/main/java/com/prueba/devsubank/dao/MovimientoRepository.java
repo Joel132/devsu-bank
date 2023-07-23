@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +18,8 @@ public interface MovimientoRepository extends CrudRepository<Movimiento, Long> {
 
     List<Movimiento> findMovimientosByCuentaAndIdIsGreaterThan(Cuenta cuenta, Long id);
 
-    List<Movimiento> findMovimientosByFechaBetweenAndTipoEquals(OffsetDateTime today, OffsetDateTime tomorrow, TipoMovimiento tipo);
+    List<Movimiento> findMovimientosByFechaBetweenAndTipoEquals(LocalDate today, LocalDate tomorrow, TipoMovimiento tipo);
 
-    List<Movimiento> findMovimientosByCuenta_Cliente_IdAndFechaBetweenOrderByIdAsc(Long clienteId, OffsetDateTime to, OffsetDateTime t1);
+    List<Movimiento> findMovimientosByCuenta_Cliente_IdAndFechaBetweenOrderByIdAsc(Long clienteId, LocalDate to, LocalDate t1);
 
 }

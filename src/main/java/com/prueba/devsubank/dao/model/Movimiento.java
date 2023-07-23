@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "movimiento")
@@ -17,7 +17,7 @@ public class Movimiento {
 
     @Column(name = "fecha", nullable = false)
     @NotNull
-    private OffsetDateTime fecha;
+    private LocalDate fecha;
 
     @Column(name = "tipo", nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
@@ -44,11 +44,11 @@ public class Movimiento {
         this.id = id;
     }
 
-    public OffsetDateTime getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(OffsetDateTime fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 

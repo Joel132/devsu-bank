@@ -6,6 +6,7 @@ import com.prueba.devsubank.dao.CuentaRepository;
 import com.prueba.devsubank.dao.MovimientoRepository;
 import com.prueba.devsubank.dao.model.Cuenta;
 import com.prueba.devsubank.dao.model.Movimiento;
+import com.prueba.devsubank.dto.MovimientoPutReq;
 import com.prueba.devsubank.dto.MovimientoPostReq;
 import com.prueba.devsubank.dto.ReporteGetResponse;
 import com.prueba.devsubank.enums.TipoMovimiento;
@@ -18,8 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,22 +41,82 @@ public class MovimientoService {
         logger.debug("Obteniendo cuenta {}",cuentaId);
         Cuenta cuenta = obtenerCuenta(cuentaId);
         logger.debug("Cuenta obtenida {}",cuenta);
-        BigDecimal montoExtraidoHoy = obtenerMontoExtraidoHoy();
-        logger.debug("Monto extraido durante el dia de hoy {}",montoExtraidoHoy);
-        BigDecimal saldoAntesMovimiento = obtenerSaldoAnterior(cuenta);
-        logger.debug("Saldo disponible antes del dia de hoy {}",saldoAntesMovimiento);
-        Movimiento movimiento = MovimientoBuilder.build(movimientoPostReq,saldoAntesMovimiento,cuenta);
-        if(movimiento.getSaldo().compareTo(BigDecimal.ZERO)<0){
-            logger.error("Saldo no disponible");
-            throw BankException.newBankException("00","Saldo No Disponible");
+        if(!cuenta.getActivo() || !cuenta.getCliente().getActivo()){
+            logger.error("Cliente no posee cuenta activa");
+            throw BankException.newBankException("00","Cuenta inactiva");
         }
-        if(movimientoPostReq.getTipoMovimiento().equals(TipoMovimiento.DEBITO) && montoExtraidoHoy.add(movimientoPostReq.getValor()).compareTo(configProps.getLimiteDiarioRetiro())>0){
-            logger.error("Cupo diario excedido");
-            throw BankException.newBankException("00","Cupo diario Excedido");
+        Movimiento ultimoMovimiento = obtenerUltimoMovimiento(cuenta);
+        logger.debug("El ultimo movimiento registrado para esta cuenta es: {}",ultimoMovimiento);
+        if(movimientoPostReq.getFecha().isBefore(ultimoMovimiento.getFecha())){
+            logger.error("No se puede registrar movimiento con fecha inferior al ultimo movimiento");
+            throw BankException.newBankException("00","Fecha de movimiento invalida");
+        }
+        Movimiento movimiento = MovimientoBuilder.build(movimientoPostReq,ultimoMovimiento.getSaldo(),cuenta);
+        if(movimientoPostReq.getTipoMovimiento().equals(TipoMovimiento.DEBITO)){
+            //validaciones para debito
+            BigDecimal montoExtraidoHoy = obtenerMontoExtraidoDelDia(movimientoPostReq.getFecha());
+            logger.debug("Monto extraido durante el dia de hoy {}",montoExtraidoHoy);
+            BigDecimal saldoDespuesMovimiento = movimiento.getSaldo();
+            BigDecimal montoExtraidoDelDia = montoExtraidoHoy.add(movimientoPostReq.getValor());//incluye movimiento a agregar
+            verificarDebito(saldoDespuesMovimiento, montoExtraidoDelDia);
         }
         movimiento = movimientoRepository.save(movimiento);
         logger.debug("Movimiento agregado con exito: {}",movimiento);
         return movimiento.getId();
+    }
+
+    public void eliminarMovimiento(Long movimientoId) {
+        Optional<Movimiento> movimientoO = movimientoRepository.findById(movimientoId);
+        if(movimientoO.isEmpty()){
+            throw new BankException("No se encuentra movimiento");
+        }
+        Movimiento movimiento = movimientoO.get();
+        List<Movimiento> movimientosPosteriores = movimientoRepository.findMovimientosByCuentaAndIdIsGreaterThan(movimiento.getCuenta(),movimiento.getId());
+        if(movimientosPosteriores.size()>0){
+            throw new BankException("Solo el ultimo movimiento se puede eliminar");
+        }
+
+        movimientoRepository.delete(movimiento);
+    }
+
+    public void modificarMovimiento(Long movimientoId, MovimientoPutReq movimientoPutReq) {
+        Optional<Movimiento> movimientoO = movimientoRepository.findById(movimientoId);
+        if(movimientoO.isEmpty()){
+            throw new BankException("No se encuentra movimiento");
+        }
+        Movimiento oldMovimiento = movimientoO.get();
+        List<Movimiento> movimientosPosteriores = movimientoRepository.findMovimientosByCuentaAndIdIsGreaterThan(oldMovimiento.getCuenta(),oldMovimiento.getId());
+        if(movimientosPosteriores.size()>0){
+            throw new BankException("Solo el ultimo movimiento se puede modificar");
+        }
+
+        Movimiento movimientoAModificar = MovimientoBuilder.buildMovimientoAModificar(oldMovimiento, movimientoPutReq);
+
+        if(movimientoPutReq.getTipoMovimiento().equals(TipoMovimiento.DEBITO)){
+            //validaciones para debito
+            BigDecimal valorNoConsiderable = oldMovimiento.getValor().negate();//si el movimiento a modificar era DEBITO entonces se excluye del monto extraido
+            if(oldMovimiento.getTipo().equals(TipoMovimiento.CREDITO)){
+                valorNoConsiderable = BigDecimal.ZERO;
+            }
+            BigDecimal montoExtraidoEnElDiaMovimiento = obtenerMontoExtraidoDelDia(oldMovimiento.getFecha()).subtract(valorNoConsiderable);
+            logger.debug("Monto extraido durante el dia sin movimiento a modificar {} -> {}",oldMovimiento.getFecha(),montoExtraidoEnElDiaMovimiento);
+            BigDecimal saldoDespuesMovimiento = movimientoAModificar.getSaldo();
+            BigDecimal montoExtraidoDelDia = montoExtraidoEnElDiaMovimiento.add(movimientoPutReq.getValor());//incluye movimiento a modificar
+            verificarDebito(saldoDespuesMovimiento, montoExtraidoDelDia);
+        }
+
+        movimientoRepository.save(movimientoAModificar);
+    }
+
+    private void verificarDebito(BigDecimal saldoDespuesMovimiento, BigDecimal montoExtraidoDelDia) {
+        if(saldoDespuesMovimiento.compareTo(BigDecimal.ZERO)<0){
+            logger.error("Saldo no disponible");
+            throw BankException.newBankException("00","Saldo No Disponible");
+        }
+        if(montoExtraidoDelDia.compareTo(configProps.getLimiteDiarioRetiro())>0){
+            logger.error("Cupo diario excedido");
+            throw BankException.newBankException("00","Cupo diario Excedido");
+        }
     }
 
     private BigDecimal obtenerSaldoAnterior(Cuenta cuenta) {
@@ -68,40 +128,30 @@ public class MovimientoService {
         return saldoAntesMovimiento;
     }
 
+    private Movimiento obtenerUltimoMovimiento(Cuenta cuenta){
+        Optional<Movimiento> movimientoOptional = movimientoRepository.findFirstByCuentaOrderByIdDesc(cuenta);
+        if(movimientoOptional.isPresent()){
+            return movimientoOptional.get();
+        }
+        Movimiento movimiento = new Movimiento();
+        movimiento.setSaldo(cuenta.getSaldoInicial());
+        movimiento.setFecha(LocalDate.MIN);
+        return movimiento;
+    }
+
     private Cuenta obtenerCuenta(Long cuentaId) {
         Optional<Cuenta> cuentaO = cuentaRepository.findById(cuentaId);
         if(cuentaO.isEmpty()){
-            //TODO: Lanzar error
             throw new BankException("No se encuentra cuenta");
         }
         Cuenta cuenta = cuentaO.get();
         return cuenta;
     }
 
-    public void eliminarMovimiento(Long movimientoId) {
-        Optional<Movimiento> movimientoO = movimientoRepository.findById(movimientoId);
-        if(movimientoO.isEmpty()){
-            //TODO: NOT FOUND
-        }
-        Movimiento movimiento = movimientoO.get();
-        List<Movimiento> movimientosPosteriores = movimientoRepository.findMovimientosByCuentaAndIdIsGreaterThan(movimiento.getCuenta(),movimiento.getId());
-        if(movimientosPosteriores.size()>0){
-            //TODO: SOLO SE PERMITE ELIMINAR MOVIMIENTOS QUE HAYAN SIDO ULTIMOS
-            //TODO: SI SE ELIMINA UN MOVIMIENTOS HABRIA QUE DEJAR CONSISTENTES LOS POSTERIORES
-            throw new BankException("Solo el ultimo movimiento se puede eliminar");
-        }
-
-        movimientoRepository.delete(movimiento);
+    private BigDecimal obtenerMontoExtraidoDelDia(LocalDate date) {
 
 
-    }
-
-    private BigDecimal obtenerMontoExtraidoHoy() {
-        OffsetDateTime today = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS);
-
-        OffsetDateTime tomorrow = today.plusDays(1);
-
-        List<Movimiento> movimientos = movimientoRepository.findMovimientosByFechaBetweenAndTipoEquals(today, tomorrow,TipoMovimiento.DEBITO);
+        List<Movimiento> movimientos = movimientoRepository.findMovimientosByFechaBetweenAndTipoEquals(date, date,TipoMovimiento.DEBITO);
 
         if(CollectionUtils.isEmpty(movimientos)) return BigDecimal.ZERO;
 
@@ -111,7 +161,7 @@ public class MovimientoService {
                 .negate();//se suma valores negativos
     }
 
-    public List<ReporteGetResponse> generarReporte(OffsetDateTime to, OffsetDateTime t1, Long clienteId) {
+    public List<ReporteGetResponse> generarReporte(LocalDate to, LocalDate t1, Long clienteId) {
         return ReporteBuilder.build(movimientoRepository.findMovimientosByCuenta_Cliente_IdAndFechaBetweenOrderByIdAsc(clienteId,to,t1));
     }
 }

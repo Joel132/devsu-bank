@@ -113,7 +113,6 @@ public class Cuenta {
                 ", moneda='" + moneda + '\'' +
                 ", activo=" + activo +
                 ", cliente=" + cliente +
-                ", movimientos=" + movimientos +
                 '}';
     }
 }

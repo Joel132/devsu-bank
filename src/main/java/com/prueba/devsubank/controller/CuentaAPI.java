@@ -1,5 +1,6 @@
 package com.prueba.devsubank.controller;
 
+import com.prueba.devsubank.dto.CuentaPatchReq;
 import com.prueba.devsubank.dto.CuentaPostReq;
 import com.prueba.devsubank.dto.MovimientoPostReq;
 import com.prueba.devsubank.service.CuentaService;
@@ -38,9 +39,18 @@ public class CuentaAPI {
                 .build();
     }
 
+    @PatchMapping("{cuentaId}")
+    public ResponseEntity modificarCuenta(@PathVariable Long cuentaId, @RequestBody CuentaPatchReq cuentaPatchReq){
+        logger.info("Llamada al endpont PATCH: {}/{} con el body [{}]",basePath,cuentaId, cuentaPatchReq);
+        cuentaService.modificarCuenta(cuentaId,cuentaPatchReq);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
     @DeleteMapping("{cuentaId}")
     public ResponseEntity eliminarCuenta(@PathVariable Long cuentaId){
-        logger.info("Llamada al endpont DELETE: {}/{} con el body [{}]",basePath,cuentaId);
+        logger.info("Llamada al endpont DELETE: {}/{}",basePath,cuentaId);
         cuentaService.eliminarCuenta(cuentaId);
         return ResponseEntity
                 .ok()

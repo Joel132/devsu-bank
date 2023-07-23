@@ -1,11 +1,11 @@
 package com.prueba.devsubank.dto;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 
 public class ReporteGetResponse {
 
-    private OffsetDateTime fechaMovimiento;
+    private LocalDate fechaMovimiento;
 
     private String numeroCuenta;
     private String tipoCuenta;
@@ -19,11 +19,11 @@ public class ReporteGetResponse {
 
     private BigDecimal saldoDisponible;
 
-    public OffsetDateTime getFechaMovimiento() {
+    public LocalDate getFechaMovimiento() {
         return fechaMovimiento;
     }
 
-    public void setFechaMovimiento(OffsetDateTime fechaMovimiento) {
+    public void setFechaMovimiento(LocalDate fechaMovimiento) {
         this.fechaMovimiento = fechaMovimiento;
     }
 

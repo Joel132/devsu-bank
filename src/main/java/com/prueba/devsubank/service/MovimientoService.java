@@ -68,12 +68,12 @@ public class MovimientoService {
     public void eliminarMovimiento(Long movimientoId) {
         Optional<Movimiento> movimientoO = movimientoRepository.findById(movimientoId);
         if(movimientoO.isEmpty()){
-            throw new BankException("No se encuentra movimiento");
+            throw BankException.newBankException("00","No se encuentra movimiento");
         }
         Movimiento movimiento = movimientoO.get();
         List<Movimiento> movimientosPosteriores = movimientoRepository.findMovimientosByCuentaAndIdIsGreaterThan(movimiento.getCuenta(),movimiento.getId());
         if(movimientosPosteriores.size()>0){
-            throw new BankException("Solo el ultimo movimiento se puede eliminar");
+            throw BankException.newBankException("00","Solo el ultimo movimiento se puede eliminar");
         }
 
         movimientoRepository.delete(movimiento);
@@ -82,12 +82,12 @@ public class MovimientoService {
     public void modificarMovimiento(Long movimientoId, MovimientoPutReq movimientoPutReq) {
         Optional<Movimiento> movimientoO = movimientoRepository.findById(movimientoId);
         if(movimientoO.isEmpty()){
-            throw new BankException("No se encuentra movimiento");
+            throw BankException.newBankException("00","No se encuentra movimiento");
         }
         Movimiento oldMovimiento = movimientoO.get();
         List<Movimiento> movimientosPosteriores = movimientoRepository.findMovimientosByCuentaAndIdIsGreaterThan(oldMovimiento.getCuenta(),oldMovimiento.getId());
         if(movimientosPosteriores.size()>0){
-            throw new BankException("Solo el ultimo movimiento se puede modificar");
+            throw BankException.newBankException("00","Solo el ultimo movimiento se puede modificar");
         }
 
         Movimiento movimientoAModificar = MovimientoBuilder.buildMovimientoAModificar(oldMovimiento, movimientoPutReq);
@@ -133,7 +133,7 @@ public class MovimientoService {
     private Cuenta obtenerCuenta(Long cuentaId) {
         Optional<Cuenta> cuentaO = cuentaRepository.findById(cuentaId);
         if(cuentaO.isEmpty()){
-            throw new BankException("No se encuentra cuenta");
+            throw BankException.newBankException("00","No se encuentra cuenta");
         }
         Cuenta cuenta = cuentaO.get();
         return cuenta;

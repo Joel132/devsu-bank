@@ -7,7 +7,7 @@ import jakarta.validation.constraints.*;
 import java.util.List;
 
 @Entity
-@Table(name = "cliente",uniqueConstraints = { @UniqueConstraint(columnNames = { "numero_documento", "tipo_documento" }) })
+@Table(name = "cliente",uniqueConstraints = { @UniqueConstraint(columnNames = { "numero_documento", "tipo_documento" },name = "doc_unique") })
 public class Cliente extends Persona{
 
     @Column(name = "cliente_id",length = 64, nullable = false)

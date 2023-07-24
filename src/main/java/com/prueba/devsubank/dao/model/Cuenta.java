@@ -3,13 +3,14 @@ package com.prueba.devsubank.dao.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name = "cuenta",uniqueConstraints = { @UniqueConstraint(columnNames = { "numero", "tipo" }) })
+@Table(name = "cuenta")
 public class Cuenta {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -24,6 +25,7 @@ public class Cuenta {
     @Size(min = 1, max = 16)
     private String tipo;
     @Column(name = "saldo_inicial", nullable = false)
+    @PositiveOrZero
     private BigDecimal saldoInicial;
     @Column(name = "moneda", nullable = false, length = 8)
     @NotBlank

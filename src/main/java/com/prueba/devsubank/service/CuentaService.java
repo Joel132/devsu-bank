@@ -28,28 +28,36 @@ public class CuentaService {
     }
 
     public Long crearCuenta(CuentaPostReq cuentaPostReq, Long clienteId){
-        logger.debug("Obteniendo cliente {}",clienteId);
-        Cliente cliente = obtenerCliente(clienteId);
-        logger.debug("Cliente obtenido {}",cliente);
-        if(!cliente.getActivo()){
-            throw new BankException("Cliente no esta activo");
+        try {
+            logger.debug("Obteniendo cliente {}",clienteId);
+            Cliente cliente = obtenerCliente(clienteId);
+            logger.debug("Cliente obtenido {}",cliente);
+            if(!cliente.getActivo()){
+                throw BankException.newBankException("00","Cliente no esta activo");
+            }
+            Cuenta cuenta = CuentaBuilder.build(cuentaPostReq,cliente);
+            cuenta = cuentaRepository.save(cuenta);
+            logger.debug("Cuenta creada con exito: {}",cuenta);
+            return cuenta.getId();
+        } catch (DataIntegrityViolationException ex) {
+            throw BankException.newBankException("00","Numero de cuenta ya existe");
         }
-        Cuenta cuenta = CuentaBuilder.build(cuentaPostReq,cliente);
-        cuenta = cuentaRepository.save(cuenta);
-        logger.debug("Cuenta creada con exito: {}",cuenta);
-        return cuenta.getId();
     }
 
     public void modificarCuenta(Long cuentaId, CuentaPatchReq cuentaPatchReq){
-        logger.debug("Obteniendo cuenta {}",cuentaId);
-        Cuenta oldCuenta = obtenerCuenta(cuentaId);
-        logger.debug("Cuenta obtenida {}",oldCuenta);
-        if(!oldCuenta.getCliente().getActivo()){
-            throw new BankException("Cliente no esta activo");
+        try {
+            logger.debug("Obteniendo cuenta {}",cuentaId);
+            Cuenta oldCuenta = obtenerCuenta(cuentaId);
+            logger.debug("Cuenta obtenida {}",oldCuenta);
+            if(!oldCuenta.getCliente().getActivo()){
+                throw BankException.newBankException("00","Cliente no esta activo");
+            }
+            oldCuenta = CuentaBuilder.setearCamposNoNulos(oldCuenta, cuentaPatchReq);
+            logger.debug("Cuenta a actualizar con estos valores: {}", oldCuenta);
+            cuentaRepository.save(oldCuenta);
+        } catch (DataIntegrityViolationException ex) {
+            throw BankException.newBankException("00","Numero de cuenta ya existe");
         }
-        oldCuenta = CuentaBuilder.setearCamposNoNulos(oldCuenta, cuentaPatchReq);
-        logger.debug("Cuenta a actualizar con estos valores: {}", oldCuenta);
-        cuentaRepository.save(oldCuenta);
     }
 
     public void eliminarCuenta(Long cuentaId) {
@@ -64,7 +72,7 @@ public class CuentaService {
     private Cliente obtenerCliente(Long clienteId) {
         Optional<Cliente> clienteO = clienteRepository.findById(clienteId);
         if(clienteO.isEmpty()){
-            throw new BankException("No se encuentra cliente");
+            throw BankException.newBankException("00","No se encuentra cliente");
         }
         Cliente cliente = clienteO.get();
         return cliente;
@@ -73,7 +81,7 @@ public class CuentaService {
     private Cuenta obtenerCuenta(Long cuentaId) {
         Optional<Cuenta> cuentaOptional = cuentaRepository.findById(cuentaId);
         if(cuentaOptional.isEmpty()){
-            throw new BankException("No se encuentra cuenta");
+            throw BankException.newBankException("00","No se encuentra cuenta");
         }
         return cuentaOptional.get();
     }

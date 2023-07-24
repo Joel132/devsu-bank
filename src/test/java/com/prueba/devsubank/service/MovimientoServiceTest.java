@@ -3,6 +3,7 @@ package com.prueba.devsubank.service;
 import com.prueba.devsubank.config.DevsuBankConfig;
 import com.prueba.devsubank.dao.CuentaRepository;
 import com.prueba.devsubank.dao.MovimientoRepository;
+import com.prueba.devsubank.dao.model.Cliente;
 import com.prueba.devsubank.dao.model.Cuenta;
 import com.prueba.devsubank.dao.model.Movimiento;
 import com.prueba.devsubank.dto.MovimientoPostReq;
@@ -17,6 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +59,7 @@ class MovimientoServiceTest {
 
         //para pasar
         Mockito.when(cuentaRepository.findById(Mockito.any()))
-                .thenReturn(Optional.of(new Cuenta()));
+                .thenReturn(getCuentaConClienteActivo());
 
         //para saber cuanto ya debito el dia de hoy
         Mockito.when(movimientoRepository.findMovimientosByFechaBetweenAndTipoEquals(Mockito.any(),Mockito.any(),Mockito.any()))
@@ -83,7 +85,7 @@ class MovimientoServiceTest {
 
         //para pasar
         Mockito.when(cuentaRepository.findById(Mockito.any()))
-                .thenReturn(Optional.of(new Cuenta()));
+                .thenReturn(getCuentaConClienteActivo());
 
         //para saber cuanto ya debito el dia de hoy
         Mockito.when(movimientoRepository.findMovimientosByFechaBetweenAndTipoEquals(Mockito.any(),Mockito.any(),Mockito.any()))
@@ -96,10 +98,20 @@ class MovimientoServiceTest {
         assertThrows(BankException.class,()->movimientoService.registrarMovimiento(build(valorADebitar),1l));
     }
 
+    private static Optional<Cuenta> getCuentaConClienteActivo() {
+        Cuenta cuenta = new Cuenta();
+        cuenta.setActivo(true);
+        Cliente cliente = new Cliente();
+        cliente.setActivo(true);
+        cuenta.setCliente(cliente);
+        return Optional.of(cuenta);
+    }
+
     private Movimiento build(BigDecimal valor, BigDecimal saldo) {
         Movimiento movimiento = new Movimiento();
         movimiento.setSaldo(saldo);
         movimiento.setValor(valor);
+        movimiento.setFecha(LocalDate.now());
         return movimiento;
     }
 

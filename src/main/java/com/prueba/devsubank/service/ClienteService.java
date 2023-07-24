@@ -29,27 +29,39 @@ public class ClienteService {
     }
 
     public Long crearCliente(ClientePostReq clientePostReq){
-        Cliente cliente = ClienteBuilder.build(clientePostReq);
-        cliente = clienteRepository.save(cliente);
-        logger.debug("Cliente agregado con exito [{}]",cliente);
-        return cliente.getId();
+        try {
+            Cliente cliente = ClienteBuilder.build(clientePostReq);
+            cliente = clienteRepository.save(cliente);
+            logger.debug("Cliente agregado con exito [{}]",cliente);
+            return cliente.getId();
+        } catch (DataIntegrityViolationException ex) {
+            throw BankException.newBankException("00","Combinacion de numeroDocumento y tipoDocumento invalida ");
+        }
     }
 
     public void actualizarCliente(ClientePutReq clientePutReq, Long id){
-        Cliente oldCliente = obtenerCliente(id);
-        Cliente cliente = ClienteBuilder.build(clientePutReq,id);
-        actualizarEstadoDeCuentas(id, clientePutReq.getActivo(), oldCliente.getActivo());
-        cliente = clienteRepository.save(cliente);
-        logger.debug("Cliente actualizado con exito [{}]",cliente);
+        try {
+            Cliente oldCliente = obtenerCliente(id);
+            Cliente cliente = ClienteBuilder.build(clientePutReq,id);
+            actualizarEstadoDeCuentas(id, clientePutReq.getActivo(), oldCliente.getActivo());
+            cliente = clienteRepository.save(cliente);
+            logger.debug("Cliente actualizado con exito [{}]",cliente);
+        } catch (DataIntegrityViolationException ex) {
+            throw BankException.newBankException("00","Combinacion de numeroDocumento y tipoDocumento invalida ");
+        }
     }
 
     public void editarCliente(ClientePutReq clientePutReq, Long id){
-        Cliente oldCliente = obtenerCliente(id);
-        Cliente cliente = ClienteBuilder.build(clientePutReq,id);
-        actualizarEstadoDeCuentas(id, clientePutReq.getActivo(), oldCliente.getActivo());
-        ClienteBuilder.setearCamposNoNulos(oldCliente,cliente);
-        cliente = clienteRepository.save(oldCliente);
-        logger.debug("Cliente actualizado con exito [{}]",cliente);
+        try {
+            Cliente oldCliente = obtenerCliente(id);
+            Cliente cliente = ClienteBuilder.build(clientePutReq,id);
+            actualizarEstadoDeCuentas(id, clientePutReq.getActivo(), oldCliente.getActivo());
+            ClienteBuilder.setearCamposNoNulos(oldCliente,cliente);
+            cliente = clienteRepository.save(oldCliente);
+            logger.debug("Cliente actualizado con exito [{}]",cliente);
+        } catch (DataIntegrityViolationException ex) {
+            throw BankException.newBankException("00","Combinacion de numeroDocumento y tipoDocumento invalida ");
+        }
     }
 
     public void eliminarCliente(Long clienteId) {
@@ -66,7 +78,7 @@ public class ClienteService {
         Optional<Cliente> oldClienteO = clienteRepository.findById(id);
         if(oldClienteO.isEmpty()){
             logger.error("No existe cliente");
-            throw new BankException("No existe cliente");
+            throw BankException.newBankException("00","No existe cliente");
         }
         Cliente oldCliente = oldClienteO.get();
         return oldCliente;

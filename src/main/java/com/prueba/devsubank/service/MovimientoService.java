@@ -8,6 +8,7 @@ import com.prueba.devsubank.dao.model.Cuenta;
 import com.prueba.devsubank.dao.model.Movimiento;
 import com.prueba.devsubank.dto.MovimientoPutReq;
 import com.prueba.devsubank.dto.MovimientoPostReq;
+import com.prueba.devsubank.dto.MovimientoResponse;
 import com.prueba.devsubank.dto.ReporteGetResponse;
 import com.prueba.devsubank.enums.TipoMovimiento;
 import com.prueba.devsubank.exceptions.BankException;
@@ -37,7 +38,7 @@ public class MovimientoService {
         this.configProps = configProps;
     }
 
-    public Long registrarMovimiento(MovimientoPostReq movimientoPostReq, Long cuentaId){
+    public MovimientoResponse registrarMovimiento(MovimientoPostReq movimientoPostReq, Long cuentaId){
         logger.debug("Obteniendo cuenta {}",cuentaId);
         Cuenta cuenta = obtenerCuenta(cuentaId);
         logger.debug("Cuenta obtenida {}",cuenta);
@@ -62,7 +63,7 @@ public class MovimientoService {
         }
         movimiento = movimientoRepository.save(movimiento);
         logger.debug("Movimiento agregado con exito: {}",movimiento);
-        return movimiento.getId();
+        return MovimientoBuilder.build(movimiento,movimientoPostReq.getValor(),movimientoPostReq.getTipoMovimiento());
     }
 
     public void eliminarMovimiento(Long movimientoId) {
@@ -79,7 +80,7 @@ public class MovimientoService {
         movimientoRepository.delete(movimiento);
     }
 
-    public void modificarMovimiento(Long movimientoId, MovimientoPutReq movimientoPutReq) {
+    public MovimientoResponse modificarMovimiento(Long movimientoId, MovimientoPutReq movimientoPutReq) {
         Optional<Movimiento> movimientoO = movimientoRepository.findById(movimientoId);
         if(movimientoO.isEmpty()){
             throw BankException.newBankException("00","No se encuentra movimiento");
@@ -105,7 +106,7 @@ public class MovimientoService {
             verificarDebito(saldoDespuesMovimiento, montoExtraidoDelDia);
         }
 
-        movimientoRepository.save(movimientoAModificar);
+        return MovimientoBuilder.build(movimientoRepository.save(movimientoAModificar),movimientoPutReq.getValor(),movimientoPutReq.getTipoMovimiento());
     }
 
     private void verificarDebito(BigDecimal saldoDespuesMovimiento, BigDecimal montoExtraidoDelDia) {

@@ -4,6 +4,7 @@ import com.prueba.devsubank.dao.model.Cuenta;
 import com.prueba.devsubank.dao.model.Movimiento;
 import com.prueba.devsubank.dto.MovimientoPutReq;
 import com.prueba.devsubank.dto.MovimientoPostReq;
+import com.prueba.devsubank.dto.MovimientoResponse;
 import com.prueba.devsubank.enums.TipoMovimiento;
 
 import java.math.BigDecimal;
@@ -50,4 +51,14 @@ public class MovimientoBuilder {
 
     }
 
+    public static MovimientoResponse build(Movimiento movimiento,BigDecimal valor, TipoMovimiento tipoMovimiento) {
+        MovimientoResponse movimientoResponse = new MovimientoResponse();
+        movimientoResponse.setId(movimiento.getId());
+        movimientoResponse.setFecha(movimiento.getFecha());
+        movimientoResponse.setValor(valor);
+        movimientoResponse.setTipoMovimiento(tipoMovimiento);
+        movimientoResponse.setSaldo(movimiento.getSaldo());
+        return movimientoResponse;
+
+    }
 }

@@ -4,6 +4,7 @@ import com.prueba.devsubank.dao.model.Cliente;
 import com.prueba.devsubank.dao.model.Cuenta;
 import com.prueba.devsubank.dto.CuentaPatchReq;
 import com.prueba.devsubank.dto.CuentaPostReq;
+import com.prueba.devsubank.dto.CuentaResponse;
 
 import java.util.Objects;
 
@@ -31,5 +32,16 @@ public class CuentaBuilder {
             cuenta.setActivo(cuentaPatchReq.getActivo());
         }
         return cuenta;
+    }
+
+    public static CuentaResponse build(Cuenta cuenta) {
+        CuentaResponse cuentaResponse = new CuentaResponse();
+        cuentaResponse.setId(cuenta.getId());
+        cuentaResponse.setNumero(cuenta.getNumero());
+        cuentaResponse.setTipo(cuenta.getTipo());
+        cuentaResponse.setActivo(cuenta.getActivo());
+        cuentaResponse.setSaldoInicial(cuenta.getSaldoInicial());
+        cuentaResponse.setMoneda(cuenta.getMoneda());
+        return cuentaResponse;
     }
 }

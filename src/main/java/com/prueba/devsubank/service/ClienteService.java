@@ -5,6 +5,7 @@ import com.prueba.devsubank.dao.CuentaRepository;
 import com.prueba.devsubank.dao.model.Cliente;
 import com.prueba.devsubank.dto.ClientePostReq;
 import com.prueba.devsubank.dto.ClientePutReq;
+import com.prueba.devsubank.dto.ClienteResponse;
 import com.prueba.devsubank.exceptions.BankException;
 import com.prueba.devsubank.util.ClienteBuilder;
 import org.slf4j.Logger;
@@ -28,30 +29,31 @@ public class ClienteService {
         this.cuentaRepository = cuentaRepository;
     }
 
-    public Long crearCliente(ClientePostReq clientePostReq){
+    public ClienteResponse crearCliente(ClientePostReq clientePostReq){
         try {
             Cliente cliente = ClienteBuilder.build(clientePostReq);
             cliente = clienteRepository.save(cliente);
             logger.debug("Cliente agregado con exito [{}]",cliente);
-            return cliente.getId();
+            return ClienteBuilder.build(cliente);
         } catch (DataIntegrityViolationException ex) {
             throw BankException.newBankException("00","Combinacion de numeroDocumento y tipoDocumento invalida ");
         }
     }
 
-    public void actualizarCliente(ClientePutReq clientePutReq, Long id){
+    public ClienteResponse actualizarCliente(ClientePutReq clientePutReq, Long id){
         try {
             Cliente oldCliente = obtenerCliente(id);
             Cliente cliente = ClienteBuilder.build(clientePutReq,id);
             actualizarEstadoDeCuentas(id, clientePutReq.getActivo(), oldCliente.getActivo());
             cliente = clienteRepository.save(cliente);
             logger.debug("Cliente actualizado con exito [{}]",cliente);
+            return  ClienteBuilder.build(cliente);
         } catch (DataIntegrityViolationException ex) {
             throw BankException.newBankException("00","Combinacion de numeroDocumento y tipoDocumento invalida ");
         }
     }
 
-    public void editarCliente(ClientePutReq clientePutReq, Long id){
+    public ClienteResponse editarCliente(ClientePutReq clientePutReq, Long id){
         try {
             Cliente oldCliente = obtenerCliente(id);
             Cliente cliente = ClienteBuilder.build(clientePutReq,id);
@@ -59,6 +61,7 @@ public class ClienteService {
             ClienteBuilder.setearCamposNoNulos(oldCliente,cliente);
             cliente = clienteRepository.save(oldCliente);
             logger.debug("Cliente actualizado con exito [{}]",cliente);
+            return  ClienteBuilder.build(cliente);
         } catch (DataIntegrityViolationException ex) {
             throw BankException.newBankException("00","Combinacion de numeroDocumento y tipoDocumento invalida ");
         }

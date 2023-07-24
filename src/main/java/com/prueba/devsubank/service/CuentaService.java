@@ -6,6 +6,7 @@ import com.prueba.devsubank.dao.model.Cliente;
 import com.prueba.devsubank.dao.model.Cuenta;
 import com.prueba.devsubank.dto.CuentaPatchReq;
 import com.prueba.devsubank.dto.CuentaPostReq;
+import com.prueba.devsubank.dto.CuentaResponse;
 import com.prueba.devsubank.exceptions.BankException;
 import com.prueba.devsubank.util.CuentaBuilder;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ public class CuentaService {
         this.clienteRepository = clienteRepository;
     }
 
-    public Long crearCuenta(CuentaPostReq cuentaPostReq, Long clienteId){
+    public CuentaResponse crearCuenta(CuentaPostReq cuentaPostReq, Long clienteId){
         try {
             logger.debug("Obteniendo cliente {}",clienteId);
             Cliente cliente = obtenerCliente(clienteId);
@@ -38,13 +39,13 @@ public class CuentaService {
             Cuenta cuenta = CuentaBuilder.build(cuentaPostReq,cliente);
             cuenta = cuentaRepository.save(cuenta);
             logger.debug("Cuenta creada con exito: {}",cuenta);
-            return cuenta.getId();
+            return CuentaBuilder.build(cuenta);
         } catch (DataIntegrityViolationException ex) {
             throw BankException.newBankException("00","Numero de cuenta ya existe");
         }
     }
 
-    public void modificarCuenta(Long cuentaId, CuentaPatchReq cuentaPatchReq){
+    public CuentaResponse modificarCuenta(Long cuentaId, CuentaPatchReq cuentaPatchReq){
         try {
             logger.debug("Obteniendo cuenta {}",cuentaId);
             Cuenta oldCuenta = obtenerCuenta(cuentaId);
@@ -54,7 +55,8 @@ public class CuentaService {
             }
             oldCuenta = CuentaBuilder.setearCamposNoNulos(oldCuenta, cuentaPatchReq);
             logger.debug("Cuenta a actualizar con estos valores: {}", oldCuenta);
-            cuentaRepository.save(oldCuenta);
+            oldCuenta = cuentaRepository.save(oldCuenta);
+            return CuentaBuilder.build(oldCuenta);
         } catch (DataIntegrityViolationException ex) {
             throw BankException.newBankException("00","Numero de cuenta ya existe");
         }

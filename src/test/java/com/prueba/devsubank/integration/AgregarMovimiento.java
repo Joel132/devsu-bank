@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prueba.devsubank.dao.ClienteRepository;
 import com.prueba.devsubank.dao.CuentaRepository;
 import com.prueba.devsubank.dao.MovimientoRepository;
-import com.prueba.devsubank.dto.ClientePostReq;
-import com.prueba.devsubank.dto.CuentaPostReq;
-import com.prueba.devsubank.dto.MovimientoPostReq;
+import com.prueba.devsubank.dto.*;
 import com.prueba.devsubank.enums.Genero;
 import com.prueba.devsubank.enums.TipoMovimiento;
 import org.junit.jupiter.api.Test;
@@ -46,29 +44,29 @@ class AgregarMovimiento {
     void registrationWorksThroughAllLayers() throws Exception {
         ClientePostReq clientePostReq = buildCliente();
 
-        Object clientePath = mockMvc.perform(MockMvcRequestBuilders.post("/clientes")
+        ClienteResponse clienteResponse = objectMapper.readValue(mockMvc.perform(MockMvcRequestBuilders.post("/clientes")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(clientePostReq)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andReturn().getResponse().getHeaderValue("Location");
+                .andReturn().getResponse().getContentAsString(),ClienteResponse.class);
 
         Long count = clienteRepository.count();
         assertEquals(count, 1l);
 
         CuentaPostReq cuentaPostReq = buildCuenta();
 
-        Object cuentaPath = mockMvc.perform(MockMvcRequestBuilders.post(String.format("%s/cuentas",clientePath))
+        CuentaResponse cuentaResponse = objectMapper.readValue(mockMvc.perform(MockMvcRequestBuilders.post(String.format("/clientes/%d/cuentas",clienteResponse.getId()))
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(cuentaPostReq)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andReturn().getResponse().getHeaderValue("Location");
+                .andReturn().getResponse().getContentAsString(),CuentaResponse.class);
 
         count = cuentaRepository.count();
         assertEquals(count, 1l);
 
         MovimientoPostReq movimientoPostReq = buildMovimiento();
 
-        mockMvc.perform(MockMvcRequestBuilders.post(String.format("%s/movimientos",cuentaPath))
+        mockMvc.perform(MockMvcRequestBuilders.post(String.format("/cuentas/%d/movimientos",cuentaResponse.getId()))
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(movimientoPostReq)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());

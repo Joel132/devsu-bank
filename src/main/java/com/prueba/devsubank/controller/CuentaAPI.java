@@ -3,11 +3,13 @@ package com.prueba.devsubank.controller;
 import com.prueba.devsubank.dto.CuentaPatchReq;
 import com.prueba.devsubank.dto.CuentaPostReq;
 import com.prueba.devsubank.dto.MovimientoPostReq;
+import com.prueba.devsubank.dto.MovimientoResponse;
 import com.prueba.devsubank.service.CuentaService;
 import com.prueba.devsubank.service.MovimientoService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,23 +31,21 @@ public class CuentaAPI {
     }
 
     @PostMapping("{cuentaId}/movimientos")
-    public ResponseEntity agregarMovimientos(@Valid  @RequestBody MovimientoPostReq movimientoPostReq,
-                                                            @PathVariable Long cuentaId){
+    public ResponseEntity<MovimientoResponse> agregarMovimientos(@Valid  @RequestBody MovimientoPostReq movimientoPostReq,
+                                                                 @PathVariable Long cuentaId){
         logger.info("Llamada al endpont POST: {}/{}/movimientos con el body [{}]",basePath,cuentaId, movimientoPostReq);
 
-        Long id = movimientoService.registrarMovimiento(movimientoPostReq,cuentaId);
         return ResponseEntity
-                .created(URI.create(String.join("/",MovimientoAPI.basePath,String.valueOf(id))))
-                .build();
+                .status(HttpStatus.CREATED)
+                .body(movimientoService.registrarMovimiento(movimientoPostReq,cuentaId));
     }
 
     @PatchMapping("{cuentaId}")
     public ResponseEntity modificarCuenta(@PathVariable Long cuentaId, @RequestBody CuentaPatchReq cuentaPatchReq){
         logger.info("Llamada al endpont PATCH: {}/{} con el body [{}]",basePath,cuentaId, cuentaPatchReq);
-        cuentaService.modificarCuenta(cuentaId,cuentaPatchReq);
         return ResponseEntity
                 .ok()
-                .build();
+                .body(cuentaService.modificarCuenta(cuentaId,cuentaPatchReq));
     }
 
     @DeleteMapping("{cuentaId}")

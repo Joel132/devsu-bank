@@ -3,6 +3,7 @@ package com.prueba.devsubank.util;
 import com.prueba.devsubank.dao.model.Cliente;
 import com.prueba.devsubank.dto.ClientePostReq;
 import com.prueba.devsubank.dto.ClientePutReq;
+import com.prueba.devsubank.dto.ClienteResponse;
 
 import java.util.Objects;
 
@@ -70,5 +71,20 @@ public class ClienteBuilder {
         if(Objects.nonNull(cliente.getActivo())){
             oldCliente.setActivo(cliente.getActivo());
         }
+    }
+
+    public static ClienteResponse build(Cliente cliente) {
+        ClienteResponse clienteResponse = new ClienteResponse();
+        clienteResponse.setId(cliente.getId());
+        clienteResponse.setNombre(cliente.getNombre());
+        clienteResponse.setGenero(cliente.getGenero());
+        clienteResponse.setEdad(cliente.getEdad());
+        clienteResponse.setDireccion(cliente.getDireccion());
+        clienteResponse.setTelefono(cliente.getTelefono());
+        clienteResponse.setClienteId(cliente.getClienteId());
+        clienteResponse.setTipoDocumento(cliente.getTipoDocumento());
+        clienteResponse.setNumeroDocumento(cliente.getNumeroDocumento());
+        clienteResponse.setActivo(cliente.getActivo());
+        return clienteResponse;
     }
 }

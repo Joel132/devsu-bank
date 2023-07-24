@@ -1,13 +1,12 @@
 package com.prueba.devsubank.controller;
 
-import com.prueba.devsubank.dto.ClientePostReq;
-import com.prueba.devsubank.dto.ClientePutReq;
-import com.prueba.devsubank.dto.CuentaPostReq;
+import com.prueba.devsubank.dto.*;
 import com.prueba.devsubank.service.ClienteService;
 import com.prueba.devsubank.service.CuentaService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,47 +28,42 @@ public class ClienteAPI {
 
 
     @PostMapping()
-    public ResponseEntity crearCliente(@Valid  @RequestBody ClientePostReq clientePostReq){
+    public ResponseEntity<ClienteResponse> crearCliente(@Valid  @RequestBody ClientePostReq clientePostReq){
         logger.info("Llamada al endpont POST: {} con el body [{}]",basePath, clientePostReq);
 
-        Long id = clienteService.crearCliente(clientePostReq);
         return ResponseEntity
-                .created(URI.create(String.join("/",basePath,String.valueOf(id))))
-                .build();
+                .status(HttpStatus.CREATED)
+                .body(clienteService.crearCliente(clientePostReq));
     }
 
     @PostMapping("{clienteId}/cuentas")
-    public ResponseEntity crearCuenta(@Valid @RequestBody CuentaPostReq cuentaPostReq,
-                                                     @PathVariable Long clienteId){
+    public ResponseEntity<CuentaResponse> crearCuenta(@Valid @RequestBody CuentaPostReq cuentaPostReq,
+                                                      @PathVariable Long clienteId){
 
         logger.info("Llamada al endpont POST: {}/{}/cuentas con el body [{}]",basePath,clienteId, cuentaPostReq);
 
-        Long id = cuentaService.crearCuenta(cuentaPostReq,clienteId);
         return ResponseEntity
-                .created(URI.create(String.join("/",CuentaAPI.basePath,String.valueOf(id))))
-                .build();
+                .status(HttpStatus.CREATED)
+                .body(cuentaService.crearCuenta(cuentaPostReq,clienteId));
     }
 
     @PutMapping("{clienteId}")
-    public ResponseEntity actualizarCliente(@Valid @RequestBody ClientePutReq clientePutReq,
+    public ResponseEntity<ClienteResponse> actualizarCliente(@Valid @RequestBody ClientePutReq clientePutReq,
                                             @PathVariable Long clienteId){
         logger.info("Llamada al endpont PUT: {} para actualizar el cliente: {} con el body [{}]",basePath,clienteId, clientePutReq);
 
-        clienteService.actualizarCliente(clientePutReq,clienteId);
         return ResponseEntity
                 .ok()
-                .build();
+                .body(clienteService.actualizarCliente(clientePutReq,clienteId));
     }
 
     @PatchMapping("{clienteId}")
-    public ResponseEntity editarCliente(@RequestBody ClientePutReq clientePutReq,
+    public ResponseEntity<ClienteResponse> editarCliente(@RequestBody ClientePutReq clientePutReq,
                                             @PathVariable Long clienteId){
         logger.info("Llamada al endpont PUT: {} para actualizar el cliente: {} con el body [{}]",basePath,clienteId, clientePutReq);
-
-        clienteService.editarCliente(clientePutReq,clienteId);
         return ResponseEntity
                 .ok()
-                .build();
+                .body(clienteService.editarCliente(clientePutReq,clienteId));
     }
 
     @DeleteMapping("{clienteId}")

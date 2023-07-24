@@ -34,10 +34,9 @@ public class MovimientoAPI {
     public ResponseEntity modificarMovimiento(@PathVariable Long movimientoId, @RequestBody @Valid MovimientoPutReq movimientoPutReq){
         logger.info("Llamada al endpont PUT: {}/{} para modificar movimiento con los siguientes datos: {}",basePath,movimientoId,movimientoPutReq);
 
-        movimientoService.modificarMovimiento(movimientoId, movimientoPutReq);
         return ResponseEntity
                 .ok()
-                .build();
+                .body(movimientoService.modificarMovimiento(movimientoId, movimientoPutReq));
     }
 
 }

@@ -5,6 +5,7 @@ import com.prueba.devsubank.exceptions.BankException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -39,7 +40,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.internalServerError().body(errorResponse);
     }
 
-    @ExceptionHandler(value = {BindException.class, MissingServletRequestParameterException.class, MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler(value = {BindException.class, MissingServletRequestParameterException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorResponse> handleConflict(
             Exception ex, WebRequest request
     ){
